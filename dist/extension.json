@@ -1,0 +1,6 @@
+{
+  "name": "Recruitee Extension",
+  "id": "contentful-recruitee-extension",
+  "fieldTypes": ["Object"],
+  "srcdoc": "./index.html"
+}

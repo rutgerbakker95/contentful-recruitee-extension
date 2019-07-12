@@ -1,0 +1,153 @@
+<template>
+  <div style="text-align: left;">
+    <div v-if="selectedTitle" class="selected-vacancy">
+      {{ selectedTitle }}
+      <button @click="removeVacancy" class="selected-vacancy__delete">X</button>
+    </div>
+
+    {{ selectedInfo }}
+
+    <article @click="handler($event, index)" v-for="(item, index) in info" :key="index">
+      <h1>{{ item.title }}</h1>
+      {{ item.status }}
+    </article>
+
+    <button v-if="selected" @click="addVacancy">Voeg toe</button>
+  </div>
+</template>
+
+<script>
+import { init as initContentfulExtension } from 'contentful-ui-extensions-sdk';
+import axios from 'axios';
+
+export default {
+  name: 'Index',
+
+  data() {
+    return {
+      extension: null,
+      info: null,
+      activeClass: 'is-selected',
+      title: '',
+      selectedTitle: '',
+      selectedInfo: null,
+      selectedIndex: null,
+      selected: false,
+    };
+  },
+
+  methods: {
+    // TODO specify name
+    /**
+     * Vacany handler
+     */
+    handler($ev, index) {
+      this.removeActiveStates();
+      this.selected = true;
+      this.title = $ev.currentTarget.querySelector('h1').innerText;
+      this.selectedIndex = index;
+
+      $ev.currentTarget.classList.add(this.activeClass);
+    },
+
+    /**
+     *  remove active states
+     */
+    removeActiveStates() {
+      // UI stuff
+      const elements = document.querySelectorAll('article');
+
+      elements.forEach((el) => {
+        el.classList.remove(this.activeClass);
+      });
+    },
+
+    /**
+     * Remove vacancy from selected list
+     */
+    removeVacancy() {
+      // UI stuff
+      this.removeActiveStates();
+      this.selectedTitle = '';
+      this.title = '';
+      this.selected = false;
+      this.selectedInfo = null;
+      this.extension.field.removeValue();
+    },
+
+    /**
+     * Add vacancy to selected list
+     */
+    addVacancy() {
+      // UI stuff
+      this.selectedTitle = this.title;
+      this.selectedInfo = this.info[this.selectedIndex];
+      this.extension.field
+        .setValue(this.selectedInfo)
+        .then((data) => {
+          // eslint-disable-next-line no-console
+          console.log(data); // Returns Object.
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.log(err);
+        });
+    },
+
+    /**
+     * Get data
+     */
+    getData() {
+      const instance = axios.create({
+        baseURL: 'https://acmecompany1.recruitee.com/api/',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      instance.get('offers', {
+        // // //
+      })
+        .then((response) => {
+          this.info = response.data.offers;
+        });
+    },
+  },
+
+  mounted() {
+    initContentfulExtension((extension) => {
+      this.extension = extension;
+      this.extension.window.startAutoResizer();
+    });
+
+    this.getData();
+  },
+};
+</script>
+
+<style scoped>
+article {
+  background-color: white;
+  cursor: pointer;
+}
+
+article:hover {
+  background-color: #f4f4f4;
+}
+
+article.is-selected {
+  color: white;
+  background-color: green;
+}
+
+.selected-vacancy {
+  padding: 20px;
+  border-bottom: 1px solid black;
+  color: white;
+  background-color: blue;
+}
+
+.selected-vacancy__delete {
+  padding: 10px;
+  color: white;
+  background-color: red;
+}
+</style>
