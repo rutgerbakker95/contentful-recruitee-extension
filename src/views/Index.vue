@@ -33,6 +33,8 @@ export default {
       selectedInfo: null,
       selectedIndex: null,
       selected: false,
+      isAdded: false,
+      init: true,
     };
   },
 
@@ -82,16 +84,27 @@ export default {
       // UI stuff
       this.selectedTitle = this.title;
       this.selectedInfo = this.info[this.selectedIndex];
-      this.extension.field
-        .setValue(this.selectedInfo)
-        .then((data) => {
-          // eslint-disable-next-line no-console
-          console.log(data); // Returns Object.
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.log(err);
-        });
+
+      // Create value
+      if (this.init) {
+        this.extension.field
+          .setValue(this.selectedInfo)
+          .then((data) => {
+            // eslint-disable-next-line no-console
+            console.log(data); // Returns Object.
+
+            this.isAdded = true;
+          })
+          .catch((err) => {
+            // eslint-disable-next-line no-console
+            console.log(err);
+          });
+      }
+
+      // Update value
+      if (this.isAdded) {
+        this.extension.field.onValueChanged(this.selectedInfo);
+      }
     },
 
     /**
