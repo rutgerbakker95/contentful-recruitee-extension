@@ -74,7 +74,10 @@ export default {
       this.title = '';
       this.selected = false;
       this.selectedInfo = null;
-      this.extension.field.removeValue();
+
+      if (this.extension) {
+        this.extension.field.removeValue();
+      }
     },
 
     /**
@@ -86,7 +89,7 @@ export default {
       this.selectedInfo = this.info[this.selectedIndex];
 
       // Create value
-      if (this.init) {
+      if (this.init && this.extension) {
         this.extension.field
           .setValue(this.selectedInfo)
           .then((data) => {
@@ -102,7 +105,7 @@ export default {
       }
 
       // Update value
-      if (this.isAdded) {
+      if (this.isAdded && this.extension) {
         this.extension.field.onValueChanged(this.selectedInfo);
       }
     },
