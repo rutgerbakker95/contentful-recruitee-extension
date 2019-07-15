@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.994a10c6905943b2bbb2db5a6bf88569.js"
+  "/precache-manifest.6d30b12edeb996946b6b7b4016cc1732.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "contentful-recruitee-extension"});

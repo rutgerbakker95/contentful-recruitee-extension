@@ -8,11 +8,11 @@
     {{ selectedInfo }}
 
     <article @click="handler($event, index)" v-for="(item, index) in info" :key="index">
-      <h1>{{ item.title }}</h1>
-      {{ item.status }}
+      <h3>{{ item.title }}</h3>
+      <span class="status">{{ item.status }}</span>
     </article>
 
-    <button v-if="selected" @click="addVacancy">Voeg toe</button>
+    <button class="cf-btn-primary btn" v-if="selected" @click="addVacancy">Voeg toe</button>
   </div>
 </template>
 
@@ -46,7 +46,7 @@ export default {
     handler($ev, index) {
       this.removeActiveStates();
       this.selected = true;
-      this.title = $ev.currentTarget.querySelector('h1').innerText;
+      this.title = $ev.currentTarget.querySelector('h3').innerText;
       this.selectedIndex = index;
 
       $ev.currentTarget.classList.add(this.activeClass);
@@ -141,8 +141,11 @@ export default {
 
 <style scoped>
 article {
+  position: relative;
+  padding: 10px;
   background-color: white;
   cursor: pointer;
+  border-radius: 2px;
 }
 
 article:hover {
@@ -150,14 +153,29 @@ article:hover {
 }
 
 article.is-selected {
-  color: white;
-  background-color: green;
+  background-color: #e2e7ea;
+}
+
+h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.btn {
+  margin-top: 10px;
+}
+
+.status {
+  color: #0eb87f;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .1rem;
 }
 
 .selected-vacancy {
   padding: 20px;
   border-bottom: 1px solid black;
-  color: white;
   background-color: blue;
 }
 
